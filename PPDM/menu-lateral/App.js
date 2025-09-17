@@ -8,6 +8,7 @@ import HomeScreen from "./screens/HomeScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 import RotationScreen from "./screens/RotationScreen";
 import ZoomScreen from "./screens/ZoomScreen";
+import LongPressScreen from "./screens/LongPressScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -19,6 +20,7 @@ export default function App() {
         <Drawer.Screen name="Configurações" component={SettingsScreen} />
         <Drawer.Screen name="Rotação" component={RotationScreen} />
         <Drawer.Screen name="Zoom" component={ZoomScreen} />
+        <Drawer.Screen name="LongPress" component={LongPressScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
