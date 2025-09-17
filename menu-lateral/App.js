@@ -1,11 +1,11 @@
-import 'react-native-gesture-handler'; // sempre primeiro!
-import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import "react-native-gesture-handler"; // sempre primeiro!
+import * as React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 
 // Importa telas
-import HomeScreen from './screens/HomeScreen';
-import SettingsScreen from './screens/SettingsScreen';
+import HomeScreen from "./screens/HomeScreen";
+import SettingsScreen from "./screens/SettingsScreen";
 
 // Cria o Drawer (menu lateral)
 const Drawer = createDrawerNavigator();
