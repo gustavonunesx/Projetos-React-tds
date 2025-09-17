@@ -6,17 +6,16 @@ export default function HomeScreen() {
   const [count, setCount] = useState(0);
   const [colorIndex, setColorIndex] = useState(0);
 
-  // Lista de cores para trocar
   const colors = ["#3498db", "#2ecc71", "#e74c3c"]; // azul, verde, vermelho
 
   const onSingleTap = () => {
     setCount(count + 1);
-    setColorIndex((colorIndex + 1) % colors.length); // alterna entre 0,1,2
+    setColorIndex((colorIndex + 1) % colors.length);
   };
 
   const resetCount = () => {
     setCount(0);
-    setColorIndex(0); // opcional: volta cor inicial
+    setColorIndex(0);
   };
 
   return (
@@ -33,14 +32,6 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  text: {
-    fontSize: 20,
-    color: "#fff",
-    margin: 10,
-  },
+  container: { flex: 1, justifyContent: "center", alignItems: "center" },
+  text: { fontSize: 20, color: "#fff", margin: 10 },
 });
