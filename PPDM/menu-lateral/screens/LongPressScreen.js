@@ -1,23 +1,34 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useState, useRef } from "react";
+import { View, Text, StyleSheet, Animated } from "react-native";
 import { LongPressGestureHandler, State } from "react-native-gesture-handler";
 
-export default function LongPressScreen() {
+export default function LongPressAnimatedScreen() {
   const [boxColor, setBoxColor] = useState("#FF6347"); // vermelho inicial
-  const [message, setMessage] = useState("Pressione e segure o quadrado");
   const [longPressCount, setLongPressCount] = useState(0);
+  const scale = useRef(new Animated.Value(1)).current; // escala inicial
 
   const minDuration = 1000; // 1 segundo
+
+  const animateScale = (toValue) => {
+    Animated.timing(scale, {
+      toValue,
+      duration: 200, // duração da animação
+      useNativeDriver: true,
+    }).start();
+  };
 
   const onHandlerStateChange = (event) => {
     if (event.nativeEvent.state === State.ACTIVE) {
       // Quando começa o toque longo
       setBoxColor("#32CD32"); // verde
-      setMessage("Segurando...");
-    } else if (event.nativeEvent.state === State.END || event.nativeEvent.state === State.CANCELLED) {
+      animateScale(1.5); // aumenta suavemente
+    } else if (
+      event.nativeEvent.state === State.END ||
+      event.nativeEvent.state === State.CANCELLED
+    ) {
       // Quando solta
       setBoxColor("#FF6347"); // volta ao vermelho
-      setMessage("Você fez um toque longo!");
+      animateScale(1); // retorna ao tamanho original
       setLongPressCount(longPressCount + 1);
     }
   };
@@ -25,14 +36,22 @@ export default function LongPressScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.counter}>Toques longos: {longPressCount}</Text>
-      <Text style={styles.title}>{message}</Text>
+      <Text style={styles.title}>Segure o quadrado</Text>
       <LongPressGestureHandler
         onHandlerStateChange={onHandlerStateChange}
         minDurationMs={minDuration}
       >
-        <View style={[styles.box, { backgroundColor: boxColor }]}>
+        <Animated.View
+          style={[
+            styles.box,
+            {
+              backgroundColor: boxColor,
+              transform: [{ scale }], // aplica a escala animada
+            },
+          ]}
+        >
           <Text style={styles.boxText}>Segure-me</Text>
-        </View>
+        </Animated.View>
       </LongPressGestureHandler>
     </View>
   );
