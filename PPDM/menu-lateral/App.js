@@ -9,6 +9,8 @@ import SettingsScreen from "./screens/SettingsScreen";
 import RotationScreen from "./screens/RotationScreen";
 import ZoomScreen from "./screens/ZoomScreen";
 import LongPressScreen from "./screens/LongPressScreen";
+import SensorAcelerometro from "./screens/SensorAcelerometro";
+
 
 const Drawer = createDrawerNavigator();
 
@@ -21,6 +23,7 @@ export default function App() {
         <Drawer.Screen name="Rotação" component={RotationScreen} />
         <Drawer.Screen name="Zoom" component={ZoomScreen} />
         <Drawer.Screen name="LongPress" component={LongPressScreen} />
+        <Drawer.Screen name="Sensor Acelerometro" component={SensorAcelerometro} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
