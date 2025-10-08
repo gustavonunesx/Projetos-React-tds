@@ -10,6 +10,9 @@ import RotationScreen from "./screens/RotationScreen";
 import ZoomScreen from "./screens/ZoomScreen";
 import LongPressScreen from "./screens/LongPressScreen";
 import SensorAcelerometro from "./screens/SensorAcelerometro";
+import Gps from "./screens/Gps";
+import Camera from "./screens/Camera";
+import Wifi from "./screens/Wifi";
 
 
 const Drawer = createDrawerNavigator();
@@ -24,6 +27,9 @@ export default function App() {
         <Drawer.Screen name="Zoom" component={ZoomScreen} />
         <Drawer.Screen name="LongPress" component={LongPressScreen} />
         <Drawer.Screen name="Sensor Acelerometro" component={SensorAcelerometro} />
+        <Drawer.Screen name="GPS" component={Gps} />
+        <Drawer.Screen name="Camera" component={Camera} />
+        <Drawer.Screen name="Wifi" component={Wifi} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
