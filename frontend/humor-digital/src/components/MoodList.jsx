@@ -85,7 +85,7 @@ export default function MoodList({ moods, saveMoods }) {
               
               <div className="mood-content">
                 <div className="mood-header">
-                  <span className="mood-emoji">{moodEmojis[mood.mood]}</span>
+                  <span className="mood-emoji-list">{moodEmojis[mood.mood]}</span>
                   <span className="mood-type">{mood.mood}</span>
                   <span className="mood-date">{mood.date}</span>
                 </div>
@@ -94,12 +94,14 @@ export default function MoodList({ moods, saveMoods }) {
                   <p className="mood-description">{mood.description}</p>
                 )}
                 
-                <button 
-                  onClick={() => removeMood(mood.id)}
-                  className="remove-button"
-                >
-                  🗑️ Remover
-                </button>
+                <div className="mood-actions">
+                  <button 
+                    onClick={() => removeMood(mood.id)}
+                    className="remove-button"
+                  >
+                    🗑️ Remover
+                  </button>
+                </div>
               </div>
             </div>
           ))}

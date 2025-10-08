@@ -49,7 +49,7 @@ export default function MoodChart({ moods }) {
         label: "Quantidade de Registros",
         data: Object.values(sortedMoods),
         backgroundColor: Object.keys(sortedMoods).map(mood => moodColors[mood]),
-        borderRadius: 12,
+        borderRadius: 8,
         borderWidth: 0,
       },
     ],
@@ -62,27 +62,31 @@ export default function MoodChart({ moods }) {
         data: Object.values(sortedMoods),
         backgroundColor: Object.keys(sortedMoods).map(mood => moodColors[mood]),
         borderWidth: 0,
-        borderRadius: 8,
+        borderRadius: 6,
       },
     ],
   };
 
   const chartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: 'top',
         labels: {
-          padding: 20,
+          padding: 15,
           usePointStyle: true,
           pointStyle: 'circle',
+          font: {
+            size: window.innerWidth < 768 ? 10 : 12
+          }
         }
       },
       title: {
         display: true,
         text: 'Distribuição de Humores',
         font: {
-          size: 16,
+          size: window.innerWidth < 768 ? 14 : 16,
           weight: 'bold'
         }
       },
@@ -92,11 +96,21 @@ export default function MoodChart({ moods }) {
         beginAtZero: true,
         grid: {
           color: '#f1f5f9'
+        },
+        ticks: {
+          font: {
+            size: window.innerWidth < 768 ? 10 : 12
+          }
         }
       },
       x: {
         grid: {
           display: false
+        },
+        ticks: {
+          font: {
+            size: window.innerWidth < 768 ? 10 : 12
+          }
         }
       }
     }
@@ -104,16 +118,20 @@ export default function MoodChart({ moods }) {
 
   const doughnutOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: 'bottom',
         labels: {
-          padding: 20,
+          padding: 15,
           usePointStyle: true,
+          font: {
+            size: window.innerWidth < 768 ? 10 : 12
+          }
         }
       }
     },
-    cutout: '60%',
+    cutout: '50%',
   };
 
   return (
@@ -151,7 +169,7 @@ export default function MoodChart({ moods }) {
                     className="mood-color-dot"
                     style={{ backgroundColor: moodColors[mood] }}
                   ></span>
-                  <span className="mood-name">{mood}</span>
+                  <span className="mood-stat-name">{mood}</span>
                 </div>
                 <div className="mood-stat-numbers">
                   <span className="mood-count">{count} vez{count !== 1 ? 'es' : ''}</span>

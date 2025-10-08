@@ -51,6 +51,13 @@ export default function App() {
           {activeTab === 'analytics' && moods.length > 0 && (
             <MoodChart moods={moods} />
           )}
+          {activeTab === 'analytics' && moods.length === 0 && (
+            <div className="empty-state">
+              <div className="empty-emoji">📊</div>
+              <h4>Nenhum dado para análise</h4>
+              <p>Registre alguns humores para ver as análises</p>
+            </div>
+          )}
         </div>
 
         {moods.length > 0 && (
