@@ -1,44 +1,76 @@
-import React, { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import React, { useState } from "react";
 
-const moodsOptions = [
-  { label: 'Feliz', color: 'yellow' },
-  { label: 'Triste', color: 'blue' },
-  { label: 'Estressado', color: 'red' },
-  { label: 'Animado', color: 'orange' },
-  { label: 'Cansado', color: 'gray' }
-];
-
-export default function MoodForm({ addMood }) {
-  const [description, setDescription] = useState('');
-  const [mood, setMood] = useState(moodsOptions[0].label);
+export default function MoodForm({ moods, saveMoods }) {
+  const [mood, setMood] = useState("Feliz");
+  const [description, setDescription] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const newMood = {
-      id: uuidv4(),
+      id: Date.now(),
       mood,
       description,
-      date: new Date().toISOString()
+      date: new Date().toLocaleDateString(),
     };
-    addMood(newMood);
-    setDescription('');
+    saveMoods([newMood, ...moods]);
+    setDescription("");
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mood-form">
-      <select value={mood} onChange={(e) => setMood(e.target.value)}>
-        {moodsOptions.map((m) => (
-          <option key={m.label} value={m.label}>{m.label}</option>
-        ))}
-      </select>
-      <input
-        type="text"
-        placeholder="Descrição opcional"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      />
-      <button type="submit">Registrar Humor</button>
+    <form onSubmit={handleSubmit} style={{
+      display: "flex",
+      flexDirection: "column",
+      gap: "10px",
+      marginBottom: "20px",
+      padding: "15px",
+      backgroundColor: "#fff",
+      borderRadius: "10px",
+      boxShadow: "0px 0px 10px rgba(0,0,0,0.1)"
+    }}>
+      <label>
+        Humor:
+        <select value={mood} onChange={(e) => setMood(e.target.value)} style={{
+          marginLeft: "10px",
+          padding: "5px",
+          borderRadius: "5px",
+          border: "1px solid #ccc"
+        }}>
+          <option>Feliz</option>
+          <option>Triste</option>
+          <option>Estressado</option>
+          <option>Animado</option>
+          <option>Cansado</option>
+        </select>
+      </label>
+
+      <label>
+        Descrição:
+        <input
+          type="text"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Opcional"
+          style={{
+            marginLeft: "10px",
+            padding: "5px",
+            width: "100%",
+            borderRadius: "5px",
+            border: "1px solid #ccc"
+          }}
+        />
+      </label>
+
+      <button type="submit" style={{
+        padding: "10px",
+        border: "none",
+        borderRadius: "5px",
+        backgroundColor: "#4ecdc4",
+        color: "#fff",
+        fontWeight: "bold",
+        cursor: "pointer"
+      }}>
+        Registrar Humor
+      </button>
     </form>
   );
 }
