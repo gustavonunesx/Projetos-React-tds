@@ -1,0 +1,33 @@
+body { font-family: Arial, sans-serif; background:#f7f8fa; margin:0; padding:20px }
+.container { max-width:1200px; margin: auto }
+header { text-align:center; margin-bottom:20px }
+.grid { display:flex; gap:20px; flex-wrap:wrap }
+.card { background:white; padding:15px; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,0.08); flex:1 }
+.form { display:flex; flex-direction:column; gap:8px }
+input, select, textarea { padding:8px; border-radius:6px; border:1px solid #ddd }
+button { padding:8px 10px; border-radius:6px; border:none; cursor:pointer; background:#4caf50; color:white }
+button:hover { opacity:0.95 }
+.lista { list-style:none; padding:0 }
+.lista-item { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee }
+.msg { color:green }
+.modal { position:fixed; left:0; top:0; right:0; bottom:0; background:rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center }
+.modal-content { background:white; padding:20px; border-radius:8px; width:90%; max-width:600px }
+.detalhes img { display:block; margin-bottom:10px }
+
+.checkbox-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.checkbox-list label {
+  background: #f3f3f3;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.checkbox-list input {
+  margin-right: 5px;
+}
