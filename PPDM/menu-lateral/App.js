@@ -13,6 +13,10 @@ import SensorAcelerometro from "./screens/SensorAcelerometro";
 import Gps from "./screens/Gps";
 import Camera from "./screens/Camera";
 import Wifi from "./screens/Wifi";
+import Som from "./screens/Som";
+import Login from "./screens/LoginScreen";
+import Register from "./screens/RegisterScreen";
+
 
 
 const Drawer = createDrawerNavigator();
@@ -30,6 +34,9 @@ export default function App() {
         <Drawer.Screen name="GPS" component={Gps} />
         <Drawer.Screen name="Camera" component={Camera} />
         <Drawer.Screen name="Wifi" component={Wifi} />
+        <Drawer.Screen name="Som" component={Som} />
+        <Drawer.Screen name="Login/Firebase" component={Login} />
+        <Drawer.Screen name="Register/Firebase" component={Register} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
