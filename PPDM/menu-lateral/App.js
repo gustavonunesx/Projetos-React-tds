@@ -16,6 +16,7 @@ import Wifi from "./screens/Wifi";
 import Som from "./screens/Som";
 import Login from "./screens/LoginScreen";
 import Register from "./screens/RegisterScreen";
+import ListaTarefas from "./screens/ListaTarefas";
 
 
 
@@ -37,6 +38,7 @@ export default function App() {
         <Drawer.Screen name="Som" component={Som} />
         <Drawer.Screen name="Login/Firebase" component={Login} />
         <Drawer.Screen name="Register/Firebase" component={Register} />
+        <Drawer.Screen name="Lista Tarefas" component={ListaTarefas} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
