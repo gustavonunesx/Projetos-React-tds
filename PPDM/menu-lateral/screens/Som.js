@@ -1,253 +1,233 @@
 import React, { useState, useEffect, useRef } from "react";
+// 1. Importar componentes do React Native
+import { View, Text, Button, StyleSheet, Pressable } from "react-native";
+// 2. Importar a biblioteca de Áudio do Expo
+import { Audio } from "expo-av";
+// 3. (Opcional) Usar ícones nativos
+import { Ionicons } from "@expo/vector-icons";
 
 export default function App() {
-  const audioRef = useRef(null);
+  // Mudar a referência para o objeto de Som do Expo
+  const soundRef = useRef(new Audio.Sound());
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [progress, setProgress] = useState(0);
 
-  // Estilos CSS-in-JS para a web (baseado no StyleSheet nativo)
-  const styles = {
-    container: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      minHeight: "100vh",
-      backgroundColor: "#f7fafc",
-      padding: "1rem",
-      fontFamily:
-        '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
-    },
-    card: {
-      backgroundColor: "white",
-      padding: "2rem",
-      borderRadius: "1rem",
-      boxShadow:
-        "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05)",
-      textAlign: "center",
-      width: "100%",
-      maxWidth: "28rem",
-    },
-    title: {
-      fontSize: "1.875rem", // ~30px
-      fontWeight: "700",
-      color: "#2d3748",
-      marginBottom: "0.5rem", // 8px
-    },
-    subtitle: {
-      color: "#718096",
-      marginBottom: "2rem", // 32px
-      fontSize: "1rem", // 16px
-    },
-    progressContainer: {
-      width: "100%",
-      backgroundColor: "#e2e8f0",
-      borderRadius: "9999px",
-      height: "0.5rem", // 8px
-      marginBottom: "0.5rem", // 8px
-      overflow: 'hidden',
-    },
-    progressBar: {
-      backgroundColor: "#4299e1",
-      height: "100%",
-      borderRadius: "9999px",
-      transition: "width 0.1s linear", // Transição suave para a barra
-    },
-    timeDisplay: {
-      display: "flex",
-      justifyContent: "space-between",
-      width: "100%",
-      marginBottom: "1.5rem", // 24px
-    },
-    timeText: {
-      fontSize: "0.875rem", // 14px
-      color: "#718096",
-    },
-    controls: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      gap: "1rem", // 16px
-    },
-    button: {
-      width: "4rem", // 64px
-      height: "4rem", // 64px
-      borderRadius: "50%", // 32px
-      border: "none",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      cursor: "pointer",
-      color: "white",
-      boxShadow:
-        "0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06)",
-      transition: "all 0.2s ease-in-out",
-    },
-    iconSvg: {
-      width: "24px",
-      height: "24px",
-      fill: "currentColor",
-    },
-    playButton: {
-      backgroundColor: "#48bb78",
-    },
-    pauseButton: {
-      backgroundColor: "#f6ad55",
-    },
-    stopButton: {
-      backgroundColor: "#f56565",
-    },
-  };
-
-  // Ícones SVG para a web
-  const PlayIcon = () => (
-    <svg style={styles.iconSvg} viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-  );
-  const PauseIcon = () => (
-    <svg style={styles.iconSvg} viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
-  );
-  const StopIcon = () => (
-    <svg style={styles.iconSvg} viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18"></rect></svg>
-  );
-
-  // Função para formatar o tempo
-  const formatTime = (timeInSeconds) => {
-    if (isNaN(timeInSeconds) || timeInSeconds === 0) return "0:00";
-    const minutes = Math.floor(timeInSeconds / 60);
-    const seconds = Math.floor(timeInSeconds % 60)
+  // Função para formatar o tempo (igual à sua)
+  const formatTime = (timeInMillis) => {
+    if (isNaN(timeInMillis) || timeInMillis === 0) return "0:00";
+    const totalSeconds = timeInMillis / 1000;
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = Math.floor(totalSeconds % 60)
       .toString()
       .padStart(2, "0");
     return `${minutes}:${seconds}`;
   };
 
-  // Carregar o áudio (useEffect é executado uma vez)
-  useEffect(() => {
-    const audioUrl = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
-    
-    // Usar 'new Audio()' que é a API do navegador web
-    // Garantir que a instância só é criada uma vez
-    if (!audioRef.current) {
-      audioRef.current = new Audio(audioUrl);
-    }
-    
-    const audio = audioRef.current;
-
-    // Função de callback para atualizações de status
-    const onStatusUpdate = () => {
-      setIsPlaying(!audio.paused);
-      setDuration(audio.duration || 0);
-      setProgress(audio.currentTime || 0);
-    };
-
-    const onEnded = () => {
-      setIsPlaying(false);
-      audio.currentTime = 0; // Rebobina
-    };
-
-    // Adicionar listeners de evento
-    audio.addEventListener('play', onStatusUpdate);
-    audio.addEventListener('pause', onStatusUpdate);
-    audio.addEventListener('timeupdate', onStatusUpdate);
-    audio.addEventListener('loadedmetadata', onStatusUpdate);
-    audio.addEventListener('ended', onEnded);
-    
-    // Tenta carregar os metadados
-    if(audio.readyState === 0) {
-      audio.load();
-    }
-
-    // Função de limpeza
-    return () => {
-      if (!audio) return;
-      audio.removeEventListener('play', onStatusUpdate);
-      audio.removeEventListener('pause', onStatusUpdate);
-      audio.removeEventListener('timeupdate', onStatusUpdate);
-      audio.removeEventListener('loadedmetadata', onStatusUpdate);
-      audio.removeEventListener('ended', onEnded);
+  // Função para carregar o áudio
+  const loadSound = async () => {
+    try {
+      const audioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+      await soundRef.current.loadAsync({ uri: audioUrl });
       
-      // Pausa e limpa a referência ao desmontar
-      audio.pause();
+      // Monitorar o status da reprodução
+      soundRef.current.setOnPlaybackStatusUpdate(onStatusUpdate);
+    } catch (error) {
+      console.error("Erro ao carregar o som:", error);
+    }
+  };
+
+  // Carregar o áudio (useEffect)
+  useEffect(() => {
+    // Configurar modo de áudio para tocar no alto-falante
+    Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+      playsInSilentModeIOS: true,
+      staysActiveInBackground: false,
+      shouldDuckAndroid: true,
+      playThroughEarpieceAndroid: false,
+    });
+    
+    loadSound();
+
+    // Função de limpeza para descarregar o som
+    return () => {
+      soundRef.current.unloadAsync();
     };
-  }, []); // O array vazio [] garante que isto só corre uma vez
+  }, []);
 
-  // --- Funções de Controle (Web Audio API) ---
-  const playSound = () => {
-    if (audioRef.current) {
-      audioRef.current.play().catch(e => console.error("Erro ao tocar:", e));
+  // Callback de atualização de status
+  const onStatusUpdate = (status) => {
+    if (!status.isLoaded) {
+      if (status.error) {
+        console.error(`Erro no player: ${status.error}`);
+      }
+      return;
+    }
+    
+    setIsPlaying(status.isPlaying);
+    setDuration(status.durationMillis || 0);
+    setProgress(status.positionMillis || 0);
+
+    // Se terminou, reseta o estado
+    if (status.didJustFinish) {
+      soundRef.current.stopAsync();
+      soundRef.current.setPositionAsync(0);
     }
   };
 
-  const pauseSound = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
+  // --- Funções de Controle (Expo AV API) ---
+  const playSound = async () => {
+    if (soundRef.current) {
+      await soundRef.current.playAsync();
     }
   };
 
-  const stopSound = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0; // Rebobina
+  const pauseSound = async () => {
+    if (soundRef.current) {
+      await soundRef.current.pauseAsync();
     }
   };
 
-  // --- Renderização (HTML/JSX) ---
+  const stopSound = async () => {
+    if (soundRef.current) {
+      await soundRef.current.stopAsync();
+      await soundRef.current.setPositionAsync(0); // Rebobina
+    }
+  };
+
+  // --- Renderização (React Native JSX) ---
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h1 style={styles.title}>Reprodutor de Áudio</h1>
-        <p style={styles.subtitle}>Controle a sua música</p>
+    // Usar <View> em vez de <div>
+    <View style={styles.container}>
+      <View style={styles.card}>
+        {/* Usar <Text> em vez de <h1> */}
+        <Text style={styles.title}>Reprodutor de Áudio</Text>
+        <Text style={styles.subtitle}>Controle a sua música</Text>
 
         {/* Barra de Progresso */}
-        <div style={styles.progressContainer}>
-          <div
-            style={{
-              ...styles.progressBar,
-              width: `${(progress / duration) * 100 || 0}%`,
-            }}
+        <View style={styles.progressContainer}>
+          <View
+            style={[
+              styles.progressBar,
+              { width: `${(progress / duration) * 100 || 0}%` },
+            ]}
           />
-        </div>
+        </View>
 
-        {/* Tempos */}
-        <div style={styles.timeDisplay}>
-          <span style={styles.timeText}>{formatTime(progress)}</span>
-          <span style={styles.timeText}>{formatTime(duration)}</span>
-        </div>
+        {/* Tempos (usando <Text>) */}
+        <View style={styles.timeDisplay}>
+          <Text style={styles.timeText}>{formatTime(progress)}</Text>
+          <Text style={styles.timeText}>{formatTime(duration)}</Text>
+        </View>
 
-        {/* Controles (botões HTML) */}
-        <div style={styles.controls}>
-          <button
-            onClick={playSound}
+        {/* Controles (usando <Pressable> ou <Button>) */}
+        <View style={styles.controls}>
+          <Pressable
+            onPress={playSound}
             disabled={isPlaying}
-            style={{
-              ...styles.button,
-              ...styles.playButton,
-              opacity: isPlaying ? 0.6 : 1,
-            }}
+            style={[styles.button, styles.playButton, { opacity: isPlaying ? 0.6 : 1 }]}
           >
-            <PlayIcon />
-          </button>
+            <Ionicons name="play" size={24} color="white" />
+          </Pressable>
 
-          <button
-            onClick={pauseSound}
+          <Pressable
+            onPress={pauseSound}
             disabled={!isPlaying}
-            style={{
-              ...styles.button,
-              ...styles.pauseButton,
-              opacity: !isPlaying ? 0.6 : 1,
-            }}
+            style={[styles.button, styles.pauseButton, { opacity: !isPlaying ? 0.6 : 1 }]}
           >
-            <PauseIcon />
-          </button>
+            <Ionicons name="pause" size={24} color="white" />
+          </Pressable>
 
-          <button
-            onClick={stopSound}
-            style={{ ...styles.button, ...styles.stopButton }}
+          <Pressable
+            onPress={stopSound}
+            style={[styles.button, styles.stopButton]}
           >
-            <StopIcon />
-          </button>
-        </div>
-      </div>
-    </div>
+            <Ionicons name="stop" size={24} color="white" />
+          </Pressable>
+        </View>
+      </View>
+    </View>
   );
 }
+
+// 4. Usar StyleSheet do React Native
+const styles = StyleSheet.create({
+  container: {
+    flex: 1, // Em vez de 'minHeight: 100vh'
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#f7fafc",
+    padding: 16,
+  },
+  card: {
+    backgroundColor: "white",
+    padding: 32,
+    borderRadius: 16,
+    // Sombra (boxShadow) é diferente no React Native
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 5, // Sombra para Android
+    width: "100%",
+    maxWidth: 448,
+    alignItems: 'center', // Alinhar itens no card
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: "700",
+    color: "#2d3748",
+    marginBottom: 8,
+  },
+  subtitle: {
+    color: "#718096",
+    marginBottom: 32,
+    fontSize: 16,
+  },
+  progressContainer: {
+    width: "100%",
+    backgroundColor: "#e2e8f0",
+    borderRadius: 9999,
+    height: 8,
+    marginBottom: 8,
+    overflow: 'hidden',
+  },
+  progressBar: {
+    backgroundColor: "#4299e1",
+    height: "100%",
+  },
+  timeDisplay: {
+    flexDirection: "row", // 'display: flex' é o padrão, mas a direção é 'column'. Usamos 'row' aqui.
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom: 24,
+  },
+  timeText: {
+    fontSize: 14,
+    color: "#718096",
+  },
+  controls: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 16,
+  },
+  button: {
+    width: 64,
+    height: 64,
+    borderRadius: 32, // Metade da altura/largura para ser um círculo
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 2, // Sombra leve
+  },
+  playButton: {
+    backgroundColor: "#48bb78",
+  },
+  pauseButton: {
+    backgroundColor: "#f6ad55",
+  },
+  stopButton: {
+    backgroundColor: "#f56565",
+  },
+});
