@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
-
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebaseConfig";
+
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -11,7 +10,7 @@ export default function LoginScreen({ navigation }) {
         try {
             await signInWithEmailAndPassword(auth, email, password);
             alert("Login realizado com sucesso!");
-            navigation.navigate("Home");
+            navigation.navigate("Register/Firebase");
         } catch (error) {
 
             alert("Erro ao fazer login: " + error.message);
@@ -30,7 +29,7 @@ export default function LoginScreen({ navigation }) {
             />
             <Button title="Entrar" onPress={handleLogin} />
             <Button title="Cadastrar" onPress={() =>
-                navigation.navigate("Register")} />
+                navigation.navigate("Register/Firebase")} />
         </View>
     );
 }
